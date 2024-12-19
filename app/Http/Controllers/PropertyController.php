@@ -29,7 +29,7 @@ class PropertyController extends Controller
                     ->orWhere('status', 'like', '%' . $search . '%')
                     ->orWhere('price', 'like', '%' . $search . '%')
                     ->orWhereHas('pfLocation', function ($q) use ($search) {
-                        $q->where('name', 'like', '%' . $search . '%');
+                        $q->where('location', 'like', '%' . $search . '%');
                     });
             });
         }

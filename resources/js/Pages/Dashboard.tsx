@@ -13,10 +13,11 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { Checkbox } from "@/Components/ui/checkbox";
-import { Grid2X2 } from "lucide-react";
-import { LayoutGrid, List } from "lucide-react";
+import { Delete, LayoutGrid, List, Trash } from "lucide-react";
 import PaginationComponent from "@/Components/PaginationComponent";
 import TextInput from "@/Components/TextInput";
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard({
     properties,
@@ -143,12 +144,8 @@ export default function Dashboard({
                             }
                         />
                         <Select
-                            defaultValue={
-                                queryParams.status || "all"
-                            }
-                            onValueChange={(e) =>
-                                onFilterChange("status", e)
-                            }
+                            defaultValue={queryParams.status || "all"}
+                            onValueChange={(e) => onFilterChange("status", e)}
                         >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Filter by status" />
@@ -166,6 +163,60 @@ export default function Dashboard({
                         </Select>
                     </div>
                 </div>
+
+                {Object.keys(queryParams).length > 0 && (
+                    <div className="my-4 grid lg:grid-cols-8 md:grid-cols-7 gird-cols-5 justify-between flex-wrap gap-2">
+                        <div className="lg:col-span-7 md:col-span-6 col-span-4 flex gap-2 flex-wrap">
+                            {Object.entries(queryParams).map(
+                                ([name, value]) => (
+                                    <div
+                                        key={name}
+                                        className="flex items-center bg-gray-100 rounded-full"
+                                    >
+                                        <Badge variant="filter">
+                                            <span className="mr-2">
+                                                {name}: {value as string}
+                                            </span>
+                                            <button
+                                                onClick={() => {
+                                                    const newQueryParams = {
+                                                        ...queryParams,
+                                                    };
+                                                    delete newQueryParams[name];
+                                                    router.get(
+                                                        "/dashboard",
+                                                        newQueryParams
+                                                    );
+                                                }}
+                                                className="text-gray-500 hover:text-gray-700"
+                                            >
+                                                <span className="w-5 h-5 text-xl text-red-500 hover:text-red-600">
+                                                    ×
+                                                </span>
+                                            </button>
+                                        </Badge>
+                                    </div>
+                                )
+                            )}
+                        </div>
+
+                        {/* clear all filetrs button */}
+                        <div className="flex justify-end">
+                            <Button
+                                variant={"destructive"}
+                                onClick={() => {
+                                    router.get("/dashboard");
+                                }}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                <span className="flex items-center gap-2 text-white">
+                                    Clear All{" "}
+                                    <Trash className="w-5 h-5 text-white" />
+                                </span>
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 {view === "card" ? (
                     <>
