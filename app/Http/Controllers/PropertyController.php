@@ -16,10 +16,12 @@ class PropertyController extends Controller
     public function index()
     {
         $query = Property::query()
-            ->with('pfLocation')
-            ->with('developer')
-            ->with('agent')
-            ->with('owner');
+            ->with(['pfLocation', 'developer', 'agent', 'owner']);
+
+        // handle the query params
+        if (request()->has('search')) {
+            $query->where('name', 'like', '%' . request('search') . '%');
+        }
 
         $properties = $query->paginate(10);
 
@@ -29,6 +31,7 @@ class PropertyController extends Controller
 
         return inertia('Dashboard', [
             'properties' => PropertyResource::collection($properties),
+            'queryParams' => request()->query(),
         ]);
     }
 

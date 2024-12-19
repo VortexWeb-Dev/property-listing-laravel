@@ -1,25 +1,22 @@
 import React from "react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/Components/ui/table";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
 import { Checkbox } from "@/Components/ui/checkbox";
-import { MoreHorizontal, MoreVertical } from "lucide-react";
+import {
+    ChevronLeft,
+    ChevronRight,
+    MoreHorizontal,
+    MoreVertical,
+} from "lucide-react";
 
 // asset import
 import pfLogo from "@/assets/pf.png";
 import bayutLogo from "@/assets/bayut.png";
 import dubizzleLogo from "@/assets/dubizzle.png";
 import websiteLogo from "@/assets/web.png";
+import PaginationComponent from "@/Components/PaginationComponent";
 
 interface PropertyTableProps {
     properties: any[] | null; // Replace 'any' with a proper type definition for your property object
+    meta: any | null;
     selectedProperties: number[];
     onSelectProperty: (id: number) => void;
     onSelectAll: () => void;
@@ -27,6 +24,7 @@ interface PropertyTableProps {
 
 export function PropertyTable({
     properties,
+    meta,
     selectedProperties,
     onSelectProperty,
     onSelectAll,
@@ -35,7 +33,7 @@ export function PropertyTable({
         <div className="overflow-x-auto">
             <table className="min-w-full bg-white">
                 <thead>
-                    <tr className="bg-gray-50">
+                    <tr className="bg-gray-50 text-nowrap">
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             <Checkbox
                                 checked={
@@ -121,7 +119,7 @@ export function PropertyTable({
                                 </div>
                             </td>
                             <td className="px-4 py-4">
-                                <div className="flex flex-wrap gap-2 items-center justify-start">
+                                <div className="flex text-nowrap gap-1 items-center justify-start">
                                     {property?.pf_publish ? (
                                         <img
                                             className="h-6 w-6"
@@ -203,6 +201,11 @@ export function PropertyTable({
                     ))}
                 </tbody>
             </table>
+
+            {/* pgination */}
+            <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                <PaginationComponent meta={meta} />
+            </div>
         </div>
     );
 }

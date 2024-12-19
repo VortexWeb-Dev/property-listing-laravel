@@ -1,7 +1,7 @@
 import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/react";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PropertyCard } from "./Property/Partials/PropertyCard";
 import { PropertyTable } from "./Property/Partials/PropertyTable";
 import { Button } from "@/Components/ui/button";
@@ -16,9 +16,8 @@ import {
 import { Checkbox } from "@/Components/ui/checkbox";
 import { Grid2X2 } from "lucide-react";
 import { LayoutGrid, List } from "lucide-react";
+import PaginationComponent from "@/Components/PaginationComponent";
 
-// Mock data for properties
-// const properties = [
 //     {
 //         id: 1,
 //         image: "/placeholder.svg?height=200&width=300",
@@ -74,8 +73,20 @@ import { LayoutGrid, List } from "lucide-react";
 export default function Dashboard({ properties }: { properties: any }) {
     console.log(properties);
 
-    const [view, setView] = useState<"card" | "list">("card");
-    const [selectedProperties, setSelectedProperties] = useState<number[]>([]);
+    const [view, setView] = useState<"card" | "list">(
+        (localStorage.getItem("propertyView") as "card" | "list") || "card"
+    );
+    const [selectedProperties, setSelectedProperties] = useState<number[]>(
+        JSON.parse(localStorage.getItem("selectedProperties") || "[]")
+    );
+
+    useEffect(() => {
+        localStorage.setItem("propertyView", view);
+        localStorage.setItem(
+            "selectedProperties",
+            JSON.stringify(selectedProperties)
+        );
+    }, [view, selectedProperties]);
 
     const handlePropertySelection = (propertyId: number) => {
         setSelectedProperties((prev) =>
@@ -89,7 +100,7 @@ export default function Dashboard({ properties }: { properties: any }) {
         setSelectedProperties(
             selectedProperties.length === properties?.data?.length
                 ? []
-                : properties.data.map((p:any) => p.id)
+                : properties.data.map((p: any) => p.id)
         );
     };
     return (
@@ -176,10 +187,15 @@ export default function Dashboard({ properties }: { properties: any }) {
                                     />
                                 ))}
                         </div>
+                        {/* pgination */}
+                        <div className="flex items-center justify-between border-t px-4 py-3 sm:px-6">
+                            <PaginationComponent meta={properties?.meta} />
+                        </div>
                     </>
                 ) : (
                     <PropertyTable
                         properties={properties.data}
+                        meta={properties?.meta}
                         selectedProperties={selectedProperties}
                         onSelectProperty={handlePropertySelection}
                         onSelectAll={handleSelectAll}
