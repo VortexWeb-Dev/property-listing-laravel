@@ -18,9 +18,28 @@ class PropertyController extends Controller
         $query = Property::query()
             ->with(['pfLocation', 'developer', 'agent', 'owner']);
 
-        // handle the query params
+        // handle the search query
         if (request()->has('search')) {
-            $query->where('name', 'like', '%' . request('search') . '%');
+            $search = request('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title_en', 'like', '%' . $search . '%')
+                    ->orWhereHas('agent', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('status', 'like', '%' . $search . '%')
+                    ->orWhere('price', 'like', '%' . $search . '%')
+                    ->orWhereHas('pfLocation', function ($q) use ($search) {
+                        $q->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        // handle the select query
+        if (request()->has('status')) {
+            $status = request('status');
+            if ($status != 'all') {
+                $query->where('status', $status);
+            }
         }
 
         $properties = $query->paginate(10);
@@ -31,7 +50,7 @@ class PropertyController extends Controller
 
         return inertia('Dashboard', [
             'properties' => PropertyResource::collection($properties),
-            'queryParams' => request()->query(),
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 

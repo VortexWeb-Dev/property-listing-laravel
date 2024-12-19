@@ -1,10 +1,9 @@
 import MainLayout from "@/Layouts/MainLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 
 import React, { useEffect, useState } from "react";
 import { PropertyCard } from "./Property/Partials/PropertyCard";
 import { PropertyTable } from "./Property/Partials/PropertyTable";
-import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import {
     Select,
@@ -17,61 +16,16 @@ import { Checkbox } from "@/Components/ui/checkbox";
 import { Grid2X2 } from "lucide-react";
 import { LayoutGrid, List } from "lucide-react";
 import PaginationComponent from "@/Components/PaginationComponent";
+import TextInput from "@/Components/TextInput";
 
-//     {
-//         id: 1,
-//         image: "/placeholder.svg?height=200&width=300",
-//         referenceNo: "REF001",
-//         title: "Luxury Apartment with Sea View",
-//         description: "Spacious 3-bedroom apartment with panoramic sea views",
-//         layout: { area: "150 sqm", bedrooms: 3, bathrooms: 2 },
-//         propertyType: "Residential",
-//         status: "For Sale",
-//         price: "$500,000",
-//         createdDate: "2023-01-15",
-//         updatedDate: "2023-06-20",
-//         publishStatus: "Live",
-//         location: "Palm Jumeirah, Dubai",
-//         listingAgent: {
-//             name: "John Doe",
-//             image: "/placeholder.svg?height=40&width=40",
-//         },
-//         listingOwner: {
-//             name: "Jane Smith",
-//             image: "/placeholder.svg?height=40&width=40",
-//         },
-//         unitNo: "A-101",
-//         portals: ["Property Finder", "Bayut"],
-//     },
-//     {
-//         id: 2,
-//         image: "/placeholder.svg?height=200&width=300",
-//         referenceNo: "REF001",
-//         title: "Luxury Apartment with Sea View",
-//         description: "Spacious 3-bedroom apartment with panoramic sea views",
-//         layout: { area: "150 sqm", bedrooms: 3, bathrooms: 2 },
-//         propertyType: "Residential",
-//         status: "For Sale",
-//         price: "$500,000",
-//         createdDate: "2023-01-15",
-//         updatedDate: "2023-06-20",
-//         publishStatus: "Live",
-//         location: "Palm Jumeirah, Dubai",
-//         listingAgent: {
-//             name: "John Doe",
-//             image: "/placeholder.svg?height=40&width=40",
-//         },
-//         listingOwner: {
-//             name: "Jane Smith",
-//             image: "/placeholder.svg?height=40&width=40",
-//         },
-//         unitNo: "A-101",
-//         portals: ["Property Finder", "Bayut"],
-//     },
-//     // Add more mock properties here...
-// ];
-export default function Dashboard({ properties }: { properties: any }) {
-    console.log(properties);
+export default function Dashboard({
+    properties,
+    queryParams,
+}: {
+    properties: any;
+    queryParams: any;
+}) {
+    // console.log(properties);
 
     const [view, setView] = useState<"card" | "list">(
         (localStorage.getItem("propertyView") as "card" | "list") || "card"
@@ -103,6 +57,47 @@ export default function Dashboard({ properties }: { properties: any }) {
                 : properties.data.map((p: any) => p.id)
         );
     };
+
+    queryParams = queryParams || {};
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         setDebouncedSearchTerm(searchTerm);
+    //     }, 500);
+
+    //     return () => clearTimeout(timer);
+    // }, [searchTerm]);
+
+    // useEffect(() => {
+    //     console.log(debouncedSearchTerm);
+    //     router.get("/dashboard", { search: debouncedSearchTerm });
+    // }, [debouncedSearchTerm]);
+
+    const debounce = (func: Function, wait: number) => {
+        let timeout: NodeJS.Timeout | null;
+        return (...args: any[]) => {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(() => func(...args), wait);
+        };
+    };
+
+    const onFilterChange = (name: string, value: string) => {
+        const debouncedonFilterChange = debounce(() => {
+            if (value) {
+                console.log(name, value);
+                queryParams[name] = value;
+            } else {
+                delete queryParams[name];
+            }
+            router.get("/dashboard", queryParams);
+        }, 500);
+
+        debouncedonFilterChange();
+    };
+
     return (
         <MainLayout
             header={
@@ -139,18 +134,34 @@ export default function Dashboard({ properties }: { properties: any }) {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                        <Input
+                        <TextInput
                             placeholder="Search properties..."
                             className="w-full sm:w-auto"
+                            defaultValue={queryParams.search}
+                            onChange={(e) =>
+                                onFilterChange("search", e.target.value)
+                            }
                         />
-                        <Select>
+                        <Select
+                            defaultValue={
+                                queryParams.status || "all"
+                            }
+                            onValueChange={(e) =>
+                                onFilterChange("status", e)
+                            }
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Filter by status" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All</SelectItem>
-                                <SelectItem value="sale">For Sale</SelectItem>
-                                <SelectItem value="rent">For Rent</SelectItem>
+                                <SelectItem value="all" defaultChecked>
+                                    All
+                                </SelectItem>
+                                <SelectItem value="draft">draft</SelectItem>
+                                <SelectItem value="live">live</SelectItem>
+                                <SelectItem value="unpublished">
+                                    unpublished
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
