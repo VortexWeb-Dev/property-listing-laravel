@@ -1,6 +1,6 @@
 import React from "react";
-import { ImageGallery } from "./Partials/ImageGallery";
-import { PropertyFeatures } from "./Partials/PropertyFeatures";
+import { ImageGallery } from "@/Pages/Property/Partials/ImageGallery";
+import { PropertyFeatures } from "@/Pages/Property/Partials/PropertyFeatures";
 import {
     MapPin,
     Share2,
@@ -30,7 +30,10 @@ const images = [
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
 ];
 
-function App() {
+function Index({property, queryParams} : any) {
+    console.log(property);
+    console.log(queryParams);
+    
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 py-8">
@@ -340,4 +343,4 @@ function FileItem({ filename, size }: { filename: string; size: string }) {
     );
 }
 
-export default App;
+export default Index;

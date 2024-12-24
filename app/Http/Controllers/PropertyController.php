@@ -22,14 +22,14 @@ class PropertyController extends Controller
         if (request()->has('search')) {
             $search = request('search');
             $query->where(function ($q) use ($search) {
-                $q->where('title_en', 'like', '%' . $search . '%')
+                $q->where('title_en', 'ilike', '%' . $search . '%')
                     ->orWhereHas('agent', function ($q) use ($search) {
-                        $q->where('name', 'like', '%' . $search . '%');
+                        $q->where('name', 'ilike', '%' . $search . '%');
                     })
-                    ->orWhere('status', 'like', '%' . $search . '%')
-                    ->orWhere('price', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'ilike', '%' . $search . '%')
+                    ->orWhere('price', 'ilike', '%' . $search . '%')
                     ->orWhereHas('pfLocation', function ($q) use ($search) {
-                        $q->where('location', 'like', '%' . $search . '%');
+                        $q->where('location', 'ilike', '%' . $search . '%');
                     });
             });
         }
@@ -44,10 +44,6 @@ class PropertyController extends Controller
 
         $properties = $query->paginate(10);
 
-        // echo '<pre>';
-        // echo json_encode($properties);
-        // echo '</pre>';
-
         return inertia('Dashboard', [
             'properties' => PropertyResource::collection($properties),
             'queryParams' => request()->query() ?: null,
@@ -59,7 +55,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Property/Create/Index');
     }
 
     /**
@@ -73,9 +69,22 @@ class PropertyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Property $property)
+    public function show(string $id)
     {
-        //
+        $query = Property::query()
+            ->with(['pfLocation', 'developer', 'agent', 'owner']);
+
+        // $id = request('id');
+        if ($id) {
+            $query->where('id', $id);
+        }
+
+        $property = $query->findOrFail($id);
+
+        return inertia('Property/View/Index', [
+            'property' => new PropertyResource($property),
+            'queryParams' => request()->query() ?: null,
+        ]);
     }
 
     /**

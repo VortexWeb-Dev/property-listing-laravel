@@ -17,6 +17,7 @@ import PaginationComponent from "@/Components/PaginationComponent";
 interface PropertyTableProps {
     properties: any[] | null; // Replace 'any' with a proper type definition for your property object
     meta: any | null;
+    queryParams: any;
     selectedProperties: number[];
     onSelectProperty: (id: number) => void;
     onSelectAll: () => void;
@@ -25,6 +26,7 @@ interface PropertyTableProps {
 export function PropertyTable({
     properties,
     meta,
+    queryParams,
     selectedProperties,
     onSelectProperty,
     onSelectAll,
@@ -204,7 +206,7 @@ export function PropertyTable({
 
             {/* pgination */}
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                <PaginationComponent meta={meta} />
+                <PaginationComponent meta={meta} queryParams={queryParams} />
             </div>
         </div>
     );

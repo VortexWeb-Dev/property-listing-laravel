@@ -9,14 +9,21 @@ import {
     PaginationPrevious,
 } from "@/Components/ui/pagination";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-function PaginationComponent({ meta }: any) {
+function PaginationComponent({ meta, queryParams }: any) {
+    console.log(queryParams);
+
+    const queryParamsString = Object.entries(queryParams)
+        .filter(([key]) => key !== 'page')
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+
     return (
         <Pagination>
             <PaginationContent>
                 {meta?.links?.map((link: any) => (
                     <PaginationItem key={link.label}>
                         <PaginationLink
-                            href={link.url}
+                            href={link.url + "&" + queryParamsString}
                             className={
                                 link.label === "&laquo; Previous" ||
                                 link.label === "Next &raquo;"

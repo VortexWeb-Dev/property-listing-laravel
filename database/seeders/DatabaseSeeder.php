@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\bayutLocations;
-use App\Models\developer;
-use App\Models\owner;
-use App\Models\pfLocations;
-use App\Models\property;
+use App\Models\BayutLocations;
+use App\Models\Developer;
+use App\Models\Owner;
+use App\Models\PfLocations;
+use App\Models\Property;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
