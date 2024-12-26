@@ -24,8 +24,8 @@ import { FilterDialog } from "./Property/Partials/FilterDialog";
 import { dummyProperties } from "@/constants/dummy";
 
 export default function Dashboard({
-    properties = dummyProperties,
-    queryParams = {},
+    properties,
+    queryParams,
 }: {
     properties: any;
     queryParams: any;
