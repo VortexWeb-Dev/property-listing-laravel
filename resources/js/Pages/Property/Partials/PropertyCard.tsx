@@ -81,8 +81,7 @@ export function PropertyCard({
                                         onClick={() =>
                                             router.visit(
                                                 route("property.show", {
-                                                    id: property?.id,
-                                                    test: "test",
+                                                    id: property?.id,                                                   
                                                 })
                                             )
                                         }

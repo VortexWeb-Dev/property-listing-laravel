@@ -24,7 +24,7 @@ export function PropertyTypeSection({ value, onChange }: PropertyTypeSectionProp
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Choose Property Type</h3>
+      <h3 className="text-lg font-semibold">Choose Property Type<span className="text-red-600">*</span></h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {types.map((type) => {
           const Icon = type.icon;

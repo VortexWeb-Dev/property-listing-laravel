@@ -6,6 +6,7 @@ use App\Models\Property;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Http\Resources\PropertyResource;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PropertyController extends Controller
@@ -42,7 +43,7 @@ class PropertyController extends Controller
             }
         }
 
-        $properties = $query->paginate(10);
+        $properties = $query->orderBy('updated_at', 'desc')->paginate(10);
 
         return inertia('Dashboard', [
             'properties' => PropertyResource::collection($properties),
@@ -61,9 +62,49 @@ class PropertyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePropertyRequest $request)
+    public function store(Request $request)
     {
-        //
+        function mapOfferingType($offeringType, $listingType)
+        {
+            switch ("{$offeringType}-{$listingType}") {
+                case 'residential-rent':
+                    return 'RR';
+                case 'residential-sale':
+                    return 'RS';
+                case 'commercial-rent':
+                    return 'CR';
+                case 'commercial-sale':
+                    return 'CS';
+                default:
+                    return 'RS';
+            }
+        }
+
+        $data = $request->all();
+        $dataToInsert = [
+            'reference_number' => $data['referenceNumber'],
+            'title_en' => $data['title_english'],
+            'description_en' => $data['description_english'],
+            'offering_type' => mapOfferingType($data['offeringType'], $data['listingType']),
+            'property_type' => $data['propertyType'],
+            'size' => $data['size'],
+            'unit_no' => $data['unitNo'],
+            'bedrooms' => $data['bedrooms'],
+            'bathrooms' => $data['bathrooms'],
+            'price' => $data['price'],
+            'agent_id' => 1,
+            'owner_id' => 1,
+            'rera_permit' => $data['reraPermitNumber'],
+            'status' => 'draft',
+            'pf_location_id' => 1,
+            'bayut_location_id' => 1
+        ];
+        // dd($data);
+        // dd($dataToInsert);
+        Property::create($dataToInsert);
+
+        return to_route('dashboard')
+            ->with('success', 'Property was created');
     }
 
     /**

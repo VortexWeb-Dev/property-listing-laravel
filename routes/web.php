@@ -26,14 +26,19 @@ Route::get('/dashboard', [PropertyController::class, 'index'])->name('dashboard'
 //     return Inertia::render('Dashboard');
 // })->name('dashboard');
 
-Route::get('/property/view/{id}', [PropertyController::class, 'show'])->name('property.show');
+Route::resource('/property', PropertyController::class);
+
+// Route::get('/property/view/{id}', [PropertyController::class, 'show'])->name('property.show');
 // Route::get('/property/view/{id}', function($id){
 //     return Inertia::render('Property/View/Index', [
 //         'property' => $id,
 //     ]);
 // })->name('property.show');
 
-Route::get('/property/create', [PropertyController::class, 'create'])->name('property.create');
+
+// Route::get('/property/create', [PropertyController::class, 'create'])->name('property.create');
+// Route::post('/property/create', [PropertyController::class, 'store'])->name('property.store');
+
 // Route::get('/property/create', function(){
 //     return Inertia::render('Property/Create/Index');
 // })->name('property.create');

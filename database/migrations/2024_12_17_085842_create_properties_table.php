@@ -20,34 +20,95 @@ return new class extends Migration
             $table->text('description_en');
             $table->text('description_ar')->nullable();
             $table->enum('offering_type', ['RS', 'RR', 'CS', 'CR']);
-            $table->enum('property_type', ['AP', 'BW', 'CD', 'DX', 'FF', 'HF', 'LP', 'PH', 'TH', 'VH', 'WB', 'HA', 'LC', 'BU', 'WH', 'FA', 'OF', 'RE', 'SH', 'SR', 'SA']);
-            $table->float('size')->nullable();
-            $table->string('unit_no')->nullable();
-            $table->integer('bedrooms')->nullable();
-            $table->integer('bathrooms')->nullable();
+            $table->enum('property_type', [
+                'AP',
+                'TH',
+                'VH',
+                'PH',
+                'LP',
+                'FF',
+                'BU',
+                'CD',
+                'DX',
+                'FA',
+                'FA',
+                'HA',
+                'HF',
+                'LC',
+                'LP',
+                'OF',
+                'OF',
+                'RE',
+                'RE',
+                'SA',
+                'WB',
+                'SH',
+                'SR',
+                'OF',
+                'WH',
+                'WH',
+                'LP',
+                'FF',
+                'WB',
+                'FF'
+            ]);
+            $table->float('size');
+            $table->integer('unit_no');
+            $table->enum('bedrooms', [
+                'studio',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '10+'
+            ]);
+            $table->integer('bathrooms');
             $table->integer('parkings')->nullable();
-            $table->enum('furnished', ['unfurnished', 'semi-furnished', 'furnished']);
+            $table->enum('furnished', ['unfurnished', 'semiFurnished', 'furnished'])->nullable();
             $table->float('plot_size')->nullable();
             $table->float('lot_size')->nullable();
             $table->string('builtup_area')->nullable();
             $table->string('layout_type')->nullable();
-            $table->enum('ownership', ['free', 'none', 'lease']);
-            $table->foreignId('developer_id')->constrained('developers');
+            $table->string('project_name')->nullable();
+            $table->enum('project_status', [
+                'Ready Secondary',
+                'Off-plan Secondary',
+                'Ready Promary',
+                'Off-plan Primary'
+            ])->nullable();
+            $table->enum('sale_type', [
+                'freehold',
+                'new',
+                'resale'
+            ])->nullable();
+            $table->enum('ownership', [
+                'freehold',
+                'nonehold',
+                'leasehold'
+            ])->nullable();
+            $table->foreignId('developer_id')->nullable()->constrained('developers');
             $table->foreignId('agent_id')->constrained('owners');
             $table->foreignId('owner_id')->constrained('owners');
             $table->string('build_year')->nullable();
             $table->string('landlord_name')->nullable();
             $table->string('landlord_email')->nullable();
             $table->string('landlord_phone')->nullable();
-            $table->enum('availability', ['available', 'under_offer', 'reserved', 'sold']);
+            $table->enum('availability', ['available', 'underOffer', 'reserved', 'sold'])->nullable();
             $table->date('available_from')->nullable();
-            $table->string('rera_permit')->nullable();
+            $table->date('available_to')->nullable();
+            $table->string('rera_permit');
             $table->date('rera_issue_date')->nullable();
             $table->date('rera_expiry_date')->nullable();
             $table->string('dtcm_permit')->nullable();
             $table->float('price');
             $table->enum('rental_period', ['yearly', 'monthly', 'weekly', 'daily'])->nullable();
-            $table->enum('payment_method', ['cash', 'installments', 'cash_installments'])->nullable();
+            $table->string('payment_method')->nullable();
             $table->float('down_payment')->nullable();
             $table->integer('cheques')->nullable();
             $table->float('service_charge')->nullable();

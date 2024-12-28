@@ -17,6 +17,17 @@ import { Input } from "@/Components/ui/input";
 import { Textarea } from "@/Components/ui/textarea";
 
 import { RequiredLabel } from "@/Components/ui/required-label";
+import internal from "stream";
+
+interface CustomFormFieldProps {
+    control: any;
+    name: string;
+    label: string;
+    type?: string;
+    options?: Array<{ value: string; label: string }>;
+    required?: boolean;
+    placeholder?: string;
+}
 
 const CustomFormField = ({
     control,
@@ -26,7 +37,7 @@ const CustomFormField = ({
     options = [],
     required = false,
     placeholder = "",
-}: any) => {
+}: CustomFormFieldProps) => {
     return (
         <FormField
             control={control}
@@ -47,9 +58,9 @@ const CustomFormField = ({
                                     <SelectValue placeholder={placeholder} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {options?.map((option: any) => (
+                                    {options?.map((option) => (
                                         <SelectItem
-                                            key={option.value}
+                                            key={option.label}
                                             value={option.value}
                                         >
                                             {option.label}
@@ -58,12 +69,16 @@ const CustomFormField = ({
                                 </SelectContent>
                             </Select>
                         ) : type === "textarea" ? (
-                            <Textarea {...field} placeholder={placeholder} />
+                            <Textarea
+                                placeholder={placeholder}
+                                className="min-h-[200px]"
+                                {...field}
+                            />
                         ) : (
                             <Input
-                                {...field}
                                 type={type}
                                 placeholder={placeholder}
+                                {...field}
                             />
                         )}
                     </FormControl>

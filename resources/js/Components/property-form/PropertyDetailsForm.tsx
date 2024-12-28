@@ -19,15 +19,17 @@ export function PropertyDetailsForm() {
                 <div className="space-y-4">
                     <PropertyTypeSection
                         value={form.watch("offeringType")}
-                        onChange={(value) =>
-                            form.setValue("offeringType", value)
-                        }
+                        onChange={(value) => {
+                            form.setValue("offeringType", value);
+                            form.trigger("offeringType");
+                        }}
                     />
                     <ListingTypeSection
                         value={form.watch("listingType")}
-                        onChange={(value) =>
-                            form.setValue("listingType", value)
-                        }
+                        onChange={(value) => {
+                            form.setValue("listingType", value);
+                            form.trigger("listingType");
+                        }}
                     />
                 </div>
             </Card>
@@ -45,7 +47,7 @@ export function PropertyDetailsForm() {
                                 label={field.label}
                                 type={field.type}
                                 // @ts-ignore
-                                options={field.options}
+                                options={field?.options}
                                 required={field.required}
                                 placeholder={field.placeholder}
                             />

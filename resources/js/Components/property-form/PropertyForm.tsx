@@ -20,6 +20,7 @@ import { PropertyDetailsForm } from "./PropertyDetailsForm";
 import { MediaForm } from "./MediaForm";
 import { LocationForm } from "./LocationForm";
 import { propertyDetailsSchema } from "@/lib/validations/property-schema";
+import { router } from "@inertiajs/react";
 
 const steps = [
     { label: "Property Details", icon: Home },
@@ -33,61 +34,65 @@ export function PropertyForm() {
     const [step, setStep] = useState(0);
     const form = useForm({
         resolver: zodResolver(propertyDetailsSchema),
-        // defaultValues: {
-        //     title_english: "",
-        //     description_english: "",
-        //     title_arabic: "",
-        //     description_arabic: "",
-        //     referenceNumber: "",
-        //     listingAgent: "",
-        //     listingOwner: "",
-        //     landlordName: "",
-        //     landlordEmail: "",
-        //     landlordPhone: "",
-        //     availability: "",
-        //     availableDateFrom: null,
-        //     availableDateTo: null,
-        //     titleDeed: "",
-        //     propertyType: "residential",
-        //     size: "",
-        //     unitNo: "",
-        //     bedrooms: "",
-        //     bathrooms: "",
-        //     parkingSpaces: "",
-        //     address: "",
-        //     city: "",
-        //     state: "",
-        //     zipCode: "",
-        //     landmark: "",
-        //     images: [],
-        //     virtualTour: "",
-        //     propertyDocs: [],
-        //     certificates: [],
-        //     price: "",
-        //     rentalPeriod: "",
-        //     hidePrice: "",
-        //     paymentMethod: "",
-        //     downPayment: "",
-        //     noOfCheques: "",
-        //     serviceCharge: "",
-        //     financialStatus: "",
-        //     totalPlotSize: "",
-        //     lotSize: "",
-        //     buildUpArea: "",
-        //     layoutType: "",
-        //     projectName: "",
-        //     reraPermitNumber: "",
-        //     reraPermitIssueDate: null,
-        //     reraPermitExpirationDate: null,
-        //     dtcmPermitNumber: "",
-        // },
+        defaultValues: {
+            // offeringType: "residential",
+            // listingType: "sale",
+            // title_english: "",
+            // description_english: "",
+            // title_arabic: "",
+            // description_arabic: "",
+            // referenceNumber: "",
+            // listingAgent: "",
+            // listingOwner: "",
+            // landlordName: "",
+            // landlordEmail: "",
+            // landlordPhone: "",
+            // availability: "",
+            // availableDateFrom: null,
+            // availableDateTo: null,
+            // titleDeed: "",
+            // propertyType: "residential",
+            // size: "",
+            // unitNo: "",
+            // bedrooms: "",
+            // bathrooms: "",
+            // parkingSpaces: "",
+            // address: "",
+            // city: "",
+            // state: "",
+            // zipCode: "",
+            // landmark: "",
+            // images: [],
+            // virtualTour: "",
+            // propertyDocs: [],
+            // certificates: [],
+            // price: "",
+            // rentalPeriod: "",
+            // hidePrice: "",
+            // paymentMethod: "",
+            // downPayment: "",
+            // noOfCheques: "",
+            // serviceCharge: "",
+            // financialStatus: "",
+            // totalPlotSize: "",
+            // lotSize: "",
+            // buildUpArea: "",
+            // layoutType: "",
+            // projectName: "",
+            // reraPermitNumber: "",
+            // reraPermitIssueDate: null,
+            // reraPermitExpirationDate: null,
+            // dtcmPermitNumber: "",
+        },
     });
 
     const onSubmit = (data: any) => {
         if (step < steps.length - 1) {
+            console.log(step);
             setStep(step + 1);
         } else {
             console.log("Form submitted:", data);
+            router.post(route("property.store"), data);
         }
     };
 
