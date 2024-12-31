@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\BayutLocationsController;
+use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\PfLocationsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
+use App\Models\BayutLocations;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,7 +31,6 @@ Route::get('/dashboard', [PropertyController::class, 'index'])->name('dashboard'
 //     return Inertia::render('Dashboard');
 // })->name('dashboard');
 
-Route::resource('/property', PropertyController::class);
 
 // Route::get('/property/view/{id}', [PropertyController::class, 'show'])->name('property.show');
 // Route::get('/property/view/{id}', function($id){
@@ -43,9 +47,9 @@ Route::resource('/property', PropertyController::class);
 //     return Inertia::render('Property/Create/Index');
 // })->name('property.create');
 
-Route::get('/agent', function () {
-    return Inertia::render('Agent/Index');
-})->name('agent');
+Route::resource('property', PropertyController::class);
+Route::get('agent', [OwnerController::class, 'index'])->name('agent');
+
 
 Route::get('/developer', function () {
     return Inertia::render('Developer/Index');

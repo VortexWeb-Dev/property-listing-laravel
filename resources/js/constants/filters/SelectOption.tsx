@@ -22,7 +22,7 @@ export function SelectOption({
     options,
     queryParams = null,
     onFilterChange = () => {},
-    width = "130px",
+    width = "150px",
 }: SelectOptionProps) {
     return (
         <Select
